@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Users API",
-    "description": "Users API",
+    "description": "API for managing users",
     "version": "1.0.0"
   },
   "host": "cse341-project1-fphm.onrender.com",
@@ -11,62 +11,46 @@
     "https"
   ],
   "paths": {
-    "/": {
+    "/users": {
       "get": {
-        "description": "",
-        "produces": [
-          "application/json"
-        ],
+        "tags": ["Users"],
+        "summary": "Get all users",
+        "produces": ["application/json"],
         "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
+          "200": { "description": "List of users" },
+          "500": { "description": "Internal Server Error" }
         }
       },
       "post": {
-        "description": "",
+        "tags": ["Users"],
+        "summary": "Create a new user",
         "parameters": [
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
-                "email": {
-                  "example": "any"
-                },
-                "username": {
-                  "example": "any"
-                },
-                "ipaddress": {
-                  "example": "any"
-                }
-              }
+                "email": { "type": "string", "example": "test@example.com" },
+                "username": { "type": "string", "example": "myUser" },
+                "ipaddress": { "type": "string", "example": "127.0.0.1" }
+              },
+              "required": ["email", "username", "ipaddress"]
             }
           }
         ],
         "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
+          "201": { "description": "User created" },
+          "400": { "description": "Bad Request" },
+          "500": { "description": "Internal Server Error" }
         }
       }
     },
-    "/{id}": {
+    "/users/{id}": {
       "get": {
-        "description": "",
-        "produces": [
-          "application/json"
-        ],
+        "tags": ["Users"],
+        "summary": "Get user by ID",
         "parameters": [
           {
             "name": "id",
@@ -76,22 +60,14 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
+          "200": { "description": "User found" },
+          "404": { "description": "User not found" },
+          "500": { "description": "Internal Server Error" }
         }
       },
       "put": {
-        "description": "",
+        "tags": ["Users"],
+        "summary": "Update user by ID",
         "parameters": [
           {
             "name": "id",
@@ -102,42 +78,27 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
-                "email": {
-                  "example": "any"
-                },
-                "username": {
-                  "example": "any"
-                },
-                "name": {
-                  "example": "any"
-                },
-                "ipaddress": {
-                  "example": "any"
-                }
+                "email": { "type": "string", "example": "test@example.com" },
+                "username": { "type": "string", "example": "myUser" },
+                "name": { "type": "string", "example": "John Doe" },
+                "ipaddress": { "type": "string", "example": "127.0.0.1" }
               }
             }
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
+          "200": { "description": "User updated" },
+          "404": { "description": "User not found" },
+          "500": { "description": "Internal Server Error" }
         }
       },
       "delete": {
-        "description": "",
+        "tags": ["Users"],
+        "summary": "Delete user by ID",
         "parameters": [
           {
             "name": "id",
@@ -147,18 +108,9 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
+          "200": { "description": "User deleted" },
+          "404": { "description": "User not found" },
+          "500": { "description": "Internal Server Error" }
         }
       }
     }
