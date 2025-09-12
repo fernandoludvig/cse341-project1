@@ -1,7 +1,7 @@
 const dotenv = require('dotenv');
 dotenv.config();
 
-const { MongoClient } = require('mongodb'); // Corrigido
+const { MongoClient } = require('mongodb');
 
 let database;
 
@@ -13,8 +13,8 @@ const initDb = (callback) => {
 
     MongoClient.connect(process.env.MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     .then((client) => {
-        database = client.db(); // Se quiser um banco específico: client.db('nome_do_banco')
-        console.log('Database initialized');
+        database = client.db('users'); // MUDE AQUI: Nome do seu banco (ex: 'mydb' ou 'test')
+        console.log('Database initialized with DB:', database.databaseName);
         callback(null, database); 
     })
     .catch((err) => {

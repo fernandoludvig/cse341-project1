@@ -1,0 +1,29 @@
+### Get all users (veja IDs aqui)
+GET http://localhost:3000/users
+
+### Create user (já fez; novo ID: 68c48e855ca28445daa6da46)
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "username": "Hello@test.com",
+  "ipaddress": "94.121.168.53"
+}
+
+### Get user by ID (use o NOVO ID do POST acima)
+GET http://localhost:3000/users/68c48e855ca28445daa6da46
+
+### PUT update user (use o NOVO ID; teste mudando 'name')
+PUT http://localhost:3000/users/68c48e855ca28445daa6da46
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "username": "test@test.com",
+  "name": "Hello Atualizado",
+  "ipaddress": "94.121.168.53"
+}
+
+### DELETE user (use o NOVO ID - APAGA do banco!)
+DELETE http://localhost:3000/users/68c48e855ca28445daa6da46
