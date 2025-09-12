@@ -5,10 +5,9 @@
     "description": "Users API",
     "version": "1.0.0"
   },
-  "host": "https://cse341-project1-fphm.onrender.com",
+  "host": "cse341-project1-fphm.onrender.com",
   "basePath": "/",
   "schemes": [
-    
     "https"
   ],
   "paths": {
