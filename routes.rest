@@ -6,9 +6,11 @@ POST http://localhost:3000/users
 Content-Type: application/json
 
 {
-  "email": "test@example.com",
-  "username": "Hello@test.com",
-  "ipaddress": "94.121.168.53"
+"firstName": "Marcus",
+"lastName": "Ludvig",
+"email": "marcus@gmail.com",
+"favoriteColor": "Green",
+"birthday": "1973-23-10"
 }
 
 ### Get user by ID (use o ID retornado pelo POST acima!)
@@ -19,10 +21,11 @@ PUT http://localhost:3000/users/68c49b8bb4269a172e5c62cd
 Content-Type: application/json
 
 {
-  "email": "test@example.com",
-  "username": "test@test.com",
-  "name": "Hello Atualizado",
-  "ipaddress": "94.121.168.53"
+"firstName": "John",
+"lastName": "Doe Atualizado",
+"email": "updated@example.com",
+"favoriteColor": "Red",
+"birthday": "1990-01-01"
 }
 
 ### DELETE user

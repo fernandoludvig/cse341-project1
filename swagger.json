@@ -32,11 +32,13 @@
             "schema": {
               "type": "object",
               "properties": {
+                "firstName": { "type": "string", "example": "John" },
+                "lastName": { "type": "string", "example": "Doe" },
                 "email": { "type": "string", "example": "test@example.com" },
-                "username": { "type": "string", "example": "myUser" },
-                "ipaddress": { "type": "string", "example": "127.0.0.1" }
+                "favoriteColor": { "type": "string", "example": "Blue" },
+                "birthday": { "type": "string", "format": "date", "example": "1990-01-01" }
               },
-              "required": ["email", "username", "ipaddress"]
+              "required": ["firstName", "lastName", "email", "favoriteColor", "birthday"]
             }
           }
         ],
@@ -82,10 +84,11 @@
             "schema": {
               "type": "object",
               "properties": {
+                "firstName": { "type": "string", "example": "John" },
+                "lastName": { "type": "string", "example": "Doe" },
                 "email": { "type": "string", "example": "test@example.com" },
-                "username": { "type": "string", "example": "myUser" },
-                "name": { "type": "string", "example": "John Doe" },
-                "ipaddress": { "type": "string", "example": "127.0.0.1" }
+                "favoriteColor": { "type": "string", "example": "Blue" },
+                "birthday": { "type": "string", "format": "date", "example": "1990-01-01" }
               }
             }
           }

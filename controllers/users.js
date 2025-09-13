@@ -38,21 +38,23 @@ const getSingle = async (req, res) => {
     }
 };
 
-// POST new user (campos: email, username, ipaddress - todos required)
+// POST new user (campos: firstName, lastName, email, favoriteColor, birthday - todos required)
 const createUser = async (req, res) => {
     try {
         console.log('createUser chamado com body:', req.body); // Debug: veja o JSON recebido
-        const { email, username, ipaddress } = req.body;
+        const { firstName, lastName, email, favoriteColor, birthday } = req.body;
 
-        if (!email || !username || !ipaddress) {
+        if (!firstName || !lastName || !email || !favoriteColor || !birthday) {
             console.log('Validação falhou: campos missing');
-            return res.status(400).json({ error: 'All fields (email, username, ipaddress) are required' });
+            return res.status(400).json({ error: 'All fields (firstName, lastName, email, favoriteColor, birthday) are required' });
         }
 
         const user = {
+            firstName,
+            lastName,
             email,
-            username,
-            ipaddress
+            favoriteColor,
+            birthday
         };
         const response = await mongodb.getDatabase().collection('users').insertOne(user);
         if (response.acknowledged) {
@@ -65,7 +67,7 @@ const createUser = async (req, res) => {
     } catch (error) {
         console.error('Erro em createUser:', error);
         if (error.code === 11000) {
-            return res.status(400).json({ error: 'Email or username already exists' });
+            return res.status(400).json({ error: 'Email already exists' });
         }
         res.status(500).json({ error: 'Server error creating user' });
     }
@@ -81,10 +83,11 @@ const updateUser = async (req, res) => {
         }
         const userIdObj = new ObjectId(userId);
         const updates = { $set: {} };
-        if (req.body.email) updates.$set.email = req.body.email;  // CORRIGIDO: updates.$set.email (não updates.$setemail)
-        if (req.body.username) updates.$set.username = req.body.username;
-        if (req.body.name) updates.$set.name = req.body.name;
-        if (req.body.ipaddress) updates.$set.ipaddress = req.body.ipaddress;
+        if (req.body.firstName) updates.$set.firstName = req.body.firstName;
+        if (req.body.lastName) updates.$set.lastName = req.body.lastName;
+        if (req.body.email) updates.$set.email = req.body.email;
+        if (req.body.favoriteColor) updates.$set.favoriteColor = req.body.favoriteColor;
+        if (req.body.birthday) updates.$set.birthday = req.body.birthday;
         if (Object.keys(updates.$set).length === 0) {
             return res.status(400).json({ error: 'No fields provided to update' });
         }
