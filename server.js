@@ -50,11 +50,16 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // Inicializa o MongoDB e inicia o servidor
 mongodb.initDb((err) => {
     if (err) {
-        console.log(err);
+        console.log('MongoDB connection error:', err);
+        console.log('Starting server without database connection...');
+        app.listen(port, () => {
+            console.log(`Server running on port ${port} (NO DATABASE)`);
+            console.log(`Swagger docs available at: http://localhost:${port}/api-docs`);
+        });
     } else {
         app.listen(port, () => {
             console.log(`Database connected, server running on port ${port}`);
-            console.log(`Swagger docs disponíveis em: http://localhost:${port}/api-docs`);
+            console.log(`Swagger docs available at: http://localhost:${port}/api-docs`);
         });
     }
 });
