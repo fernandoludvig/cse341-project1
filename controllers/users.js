@@ -49,6 +49,18 @@ const createUser = async (req, res) => {
             return res.status(400).json({ error: 'All fields (firstName, lastName, email, favoriteColor, birthday) are required' });
         }
 
+        // Validação de email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ error: 'Invalid email format' });
+        }
+
+        // Validação de data
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateRegex.test(birthday)) {
+            return res.status(400).json({ error: 'Invalid date format. Use YYYY-MM-DD' });
+        }
+
         const user = {
             firstName,
             lastName,
@@ -82,6 +94,23 @@ const updateUser = async (req, res) => {
             return res.status(400).json({ error: 'Invalid user ID format' });
         }
         const userIdObj = new ObjectId(userId);
+
+        // Validação de email se fornecido
+        if (req.body.email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(req.body.email)) {
+                return res.status(400).json({ error: 'Invalid email format' });
+            }
+        }
+
+        // Validação de data se fornecida
+        if (req.body.birthday) {
+            const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+            if (!dateRegex.test(req.body.birthday)) {
+                return res.status(400).json({ error: 'Invalid date format. Use YYYY-MM-DD' });
+            }
+        }
+
         const updates = { $set: {} };
         if (req.body.firstName) updates.$set.firstName = req.body.firstName;
         if (req.body.lastName) updates.$set.lastName = req.body.lastName;
