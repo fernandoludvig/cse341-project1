@@ -1,8 +1,8 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Users API",
-    "description": "API for managing users",
+    "title": "Users & Products API",
+    "description": "API for managing users and products",
     "version": "1.0.0"
   },
   "host": "srv-d2u7t7vfte5s73atk4pg.onrender.com",
@@ -113,6 +113,112 @@
         "responses": {
           "200": { "description": "User deleted" },
           "404": { "description": "User not found" },
+          "500": { "description": "Internal Server Error" }
+        }
+      }
+    },
+    "/products": {
+      "get": {
+        "tags": ["Products"],
+        "summary": "Get all products",
+        "produces": ["application/json"],
+        "responses": {
+          "200": { "description": "List of products" },
+          "500": { "description": "Internal Server Error" }
+        }
+      },
+      "post": {
+        "tags": ["Products"],
+        "summary": "Create a new product",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string", "example": "Laptop" },
+                "description": { "type": "string", "example": "High-performance laptop" },
+                "price": { "type": "number", "example": 999.99 },
+                "category": { "type": "string", "example": "Electronics" },
+                "inStock": { "type": "boolean", "example": true }
+              },
+              "required": ["name", "description", "price", "category", "inStock"]
+            }
+          }
+        ],
+        "responses": {
+          "201": { "description": "Product created" },
+          "400": { "description": "Bad Request" },
+          "500": { "description": "Internal Server Error" }
+        }
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "tags": ["Products"],
+        "summary": "Get product by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Product found" },
+          "404": { "description": "Product not found" },
+          "500": { "description": "Internal Server Error" }
+        }
+      },
+      "put": {
+        "tags": ["Products"],
+        "summary": "Update product by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string", "example": "Laptop" },
+                "description": { "type": "string", "example": "High-performance laptop" },
+                "price": { "type": "number", "example": 999.99 },
+                "category": { "type": "string", "example": "Electronics" },
+                "inStock": { "type": "boolean", "example": true }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Product updated" },
+          "404": { "description": "Product not found" },
+          "500": { "description": "Internal Server Error" }
+        }
+      },
+      "delete": {
+        "tags": ["Products"],
+        "summary": "Delete product by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Product deleted" },
+          "404": { "description": "Product not found" },
           "500": { "description": "Internal Server Error" }
         }
       }

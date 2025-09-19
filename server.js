@@ -29,13 +29,18 @@ app.use((req, res, next) => {
   next();
 });
 
-// Monta as rotas em /users (ex: GET /users, POST /users, GET /users/:id)
-app.use('/users', require('./routes'));
+// Mount routes
+app.use('/', require('./routes'));
 
-// Rota raiz simples para evitar 404 no Swagger ou acessos diretos
+// Root route
 app.get('/', (req, res) => {
   res.status(200).json({ 
-    message: 'Users API is running! Acesse /api-docs para documentação.' 
+    message: 'Users & Products API is running! Access /api-docs for documentation.',
+    endpoints: {
+      users: '/users',
+      products: '/products',
+      documentation: '/api-docs'
+    }
   });
 });
 
