@@ -29,9 +29,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Mount routes
-app.use('/', require('./routes'));
-
 // Root route
 app.get('/', (req, res) => {
   res.status(200).json({ 
@@ -43,6 +40,9 @@ app.get('/', (req, res) => {
     }
   });
 });
+
+// Mount routes
+app.use('/', require('./routes'));
 
 // Monta o Swagger UI em /api-docs (interativo - requisito do projeto)
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
