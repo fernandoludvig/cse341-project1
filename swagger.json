@@ -5,7 +5,7 @@
     "description": "API for managing users and products",
     "version": "1.0.0"
   },
-  "host": "srv-d2u7t7vfte5s73atk4pg.onrender.com",
+  "host": "cse341-project1-fphm.onrender.com",
   "basePath": "/",
   "schemes": [
     "https"
