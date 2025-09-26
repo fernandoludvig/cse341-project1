@@ -131,9 +131,16 @@ const login = async (req, res) => {
 
 const verifyToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
-    const token = authHeader && authHeader.startsWith('Bearer ') 
-        ? authHeader.split(' ')[1] 
-        : null;
+    let token = null;
+
+    // Verifica formato "Bearer TOKEN"
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        token = authHeader.split(' ')[1];
+    }
+    // Verifica formato de token direto (sem "Bearer")
+    else if (authHeader && authHeader.includes('eyJ')) {
+        token = authHeader;
+    }
 
     if (!token) {
         return res.status(401).json({ error: 'Access denied. Token required.' });
