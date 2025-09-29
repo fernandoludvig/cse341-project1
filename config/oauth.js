@@ -3,6 +3,7 @@ require('dotenv').config();
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const mongodb = require('../data/database');
+const { ObjectId } = require('mongodb');
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
@@ -85,7 +86,7 @@ passport.deserializeUser(async (id, done) => {
         }
 
         const user = await database.collection('users').findOne({ 
-            _id: new mongodb.ObjectId(id) 
+            _id: new ObjectId(id) 
         });
         
         done(null, user);
