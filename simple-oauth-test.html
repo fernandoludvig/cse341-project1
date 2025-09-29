@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste OAuth Simples</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 10px;
+            background-color: #db4437;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .btn:hover {
+            background-color: #c23321;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #e9ecef;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Teste OAuth Google</h1>
+        <p>Clique no botão abaixo para testar o OAuth com Google:</p>
+        
+        <a href="/auth/google" class="btn">🚀 Entrar com Google</a>
+        
+        <div id="status" class="status" style="display: none;"></div>
+        
+        <h3>URLs para Teste:</h3>
+        <ul style="text-align: left;">
+            <li><strong>OAuth Google:</strong> <a href="/auth/google">/auth/google</a></li>
+            <li><strong>Callback:</strong> <a href="/auth/google/callback">/auth/google/callback</a></li>
+            <li><strong>Health Check:</strong> <a href="/auth/health">/auth/health</a></li>
+        </ul>
+        
+        <h3>Debug:</h3>
+        <button onclick="testHealth()">Testar Health Check</button>
+        <button onclick="testCallback()">Testar Callback</button>
+    </div>
+
+    <script>
+        function showStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = 'status ' + type;
+            statusDiv.style.display = 'block';
+        }
+        
+        async function testHealth() {
+            try {
+                const response = await fetch('/auth/health');
+                const data = await response.json();
+                showStatus('Health Check: ' + JSON.stringify(data), 'success');
+            } catch (error) {
+                showStatus('Erro no Health Check: ' + error.message, 'error');
+            }
+        }
+        
+        async function testCallback() {
+            try {
+                const response = await fetch('/auth/google/callback');
+                const data = await response.json();
+                showStatus('Callback: ' + JSON.stringify(data), 'success');
+            } catch (error) {
+                showStatus('Erro no Callback: ' + error.message, 'error');
+            }
+        }
+        
+        // Test health on load
+        testHealth();
+    </script>
+</body>
+</html>

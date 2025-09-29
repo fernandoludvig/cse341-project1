@@ -12,4 +12,9 @@ router.post('/login', authController.login);
 router.post('/logout', authController.logout);
 router.get('/profile', authController.verifyToken, authController.getCurrentUser);
 
+// OAuth endpoints
+router.get('/google', authController.googleAuth);
+router.get('/google/callback', authController.googleCallback);
+router.post('/oauth/logout', authController.oauthLogout);
+
 module.exports = router;

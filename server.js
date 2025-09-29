@@ -1,8 +1,13 @@
+// Load environment variables
+require('dotenv').config();
+
 // Importa o módulo "express", que é um framework para criar servidores web em Node.js.
 // Ele facilita a criação de rotas, middlewares e manipulação de requisições/respostas HTTP.
 const express = require('express');
 const bodyParser = require('body-parser');
+const session = require('express-session');
 const mongodb = require('./data/database');
+const passport = require('./config/oauth');
 
 // Adições para Swagger
 const swaggerUi = require('swagger-ui-express');
@@ -19,6 +24,25 @@ const port = process.env.PORT || 3000;
 
 // Middleware para parsear JSON no body das requests
 app.use(bodyParser.json());
+
+// Session configuration for OAuth
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'your-session-secret-change-in-production',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: false, // Set to true in production with HTTPS
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+}));
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Serve static files from frontend directory
+app.use('/frontend', express.static('frontend'));
+app.use(express.static('frontend'));
 
 // Logging middleware for debugging
 app.use((req, res, next) => {
@@ -52,9 +76,26 @@ app.get('/', (req, res) => {
     endpoints: {
       users: '/users',
       products: '/products',
-      documentation: '/api-docs'
-    }
+      auth: '/auth',
+      documentation: '/api-docs',
+      frontend: '/frontend/auth.html',
+      test: '/test-oauth.html'
+    },
+    version: '2.0.0'
   });
+});
+
+// Serve HTML pages
+app.get('/test-oauth.html', (req, res) => {
+  res.sendFile(__dirname + '/test-oauth.html');
+});
+
+app.get('/auth.html', (req, res) => {
+  res.sendFile(__dirname + '/frontend/auth.html');
+});
+
+app.get('/simple-oauth-test.html', (req, res) => {
+  res.sendFile(__dirname + '/simple-oauth-test.html');
 });
 
 // Mount routes

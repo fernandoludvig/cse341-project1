@@ -2,6 +2,7 @@ const mongodb = require('../data/database');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const ObjectId = require('mongodb').ObjectId;
+const passport = require('../config/oauth');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 const SALT_ROUNDS = 10;
@@ -215,11 +216,85 @@ const healthCheck = async (req, res) => {
     }
 };
 
+// OAuth Google Login
+const googleAuth = passport.authenticate('google', {
+    scope: ['profile', 'email']
+});
+
+// OAuth Google Callback
+const googleCallback = (req, res, next) => {
+    passport.authenticate('google', (err, user, info) => {
+        console.log('OAuth callback - err:', err);
+        console.log('OAuth callback - user:', user);
+        console.log('OAuth callback - info:', info);
+        
+        if (err) {
+            console.error('OAuth callback error:', err);
+            return res.status(500).json({ error: 'OAuth authentication failed', details: err.message });
+        }
+        
+        if (!user) {
+            console.error('OAuth callback - no user found');
+            return res.status(401).json({ error: 'OAuth authentication failed', details: 'No user returned from Google' });
+        }
+
+        req.login(user, (err) => {
+            if (err) {
+                console.error('Login error:', err);
+                return res.status(500).json({ error: 'Login failed' });
+            }
+
+            const token = jwt.sign(
+                { userId: user._id.toString(), email: user.email },
+                JWT_SECRET,
+                { expiresIn: '24h' }
+            );
+
+            res.status(200).json({
+                message: 'OAuth login successful',
+                token: token,
+                userId: user._id.toString(),
+                user: {
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    email: user.email,
+                    favoriteColor: user.favoriteColor,
+                    birthday: user.birthday,
+                    provider: user.provider
+                }
+            });
+        });
+    })(req, res, next);
+};
+
+// OAuth Logout
+const oauthLogout = (req, res) => {
+    req.logout((err) => {
+        if (err) {
+            console.error('Logout error:', err);
+            return res.status(500).json({ error: 'Logout failed' });
+        }
+        res.status(200).json({ message: 'OAuth logout successful' });
+    });
+};
+
+// Check if user is authenticated (for OAuth)
+const isAuthenticated = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.status(401).json({ error: 'Authentication required' });
+};
+
 module.exports = {
     register,
     login,
     logout,
     verifyToken,
     getCurrentUser,
-    healthCheck
+    healthCheck,
+    googleAuth,
+    googleCallback,
+    oauthLogout,
+    isAuthenticated
 };
