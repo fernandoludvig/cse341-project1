@@ -217,12 +217,27 @@ const healthCheck = async (req, res) => {
 };
 
 // OAuth Google Login
-const googleAuth = passport.authenticate('google', {
-    scope: ['profile', 'email']
-});
+const googleAuth = (req, res, next) => {
+    if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+        return res.status(503).json({ 
+            error: 'OAuth Google not configured', 
+            message: 'Google OAuth credentials not set in environment variables' 
+        });
+    }
+    return passport.authenticate('google', {
+        scope: ['profile', 'email']
+    })(req, res, next);
+};
 
 // OAuth Google Callback
 const googleCallback = (req, res, next) => {
+    if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+        return res.status(503).json({ 
+            error: 'OAuth Google not configured', 
+            message: 'Google OAuth credentials not set in environment variables' 
+        });
+    }
+    
     passport.authenticate('google', (err, user, info) => {
         console.log('OAuth callback - err:', err);
         console.log('OAuth callback - user:', user);

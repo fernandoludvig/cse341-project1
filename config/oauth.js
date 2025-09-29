@@ -8,10 +8,12 @@ const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL || 'http://localhost:3000/auth/google/callback';
 
-passport.use(new GoogleStrategy({
-    clientID: GOOGLE_CLIENT_ID,
-    clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: GOOGLE_CALLBACK_URL
+// Only initialize OAuth if credentials are available
+if (GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET) {
+    passport.use(new GoogleStrategy({
+        clientID: GOOGLE_CLIENT_ID,
+        clientSecret: GOOGLE_CLIENT_SECRET,
+        callbackURL: GOOGLE_CALLBACK_URL
 }, async (accessToken, refreshToken, profile, done) => {
     try {
         console.log('Google OAuth profile:', profile);
@@ -65,6 +67,10 @@ passport.use(new GoogleStrategy({
         return done(error, null);
     }
 }));
+} else {
+    console.log('⚠️  OAuth Google credentials not configured. OAuth endpoints will not work.');
+    console.log('   Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET environment variables to enable OAuth.');
+}
 
 passport.serializeUser((user, done) => {
     done(null, user._id.toString());
