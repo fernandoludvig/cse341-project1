@@ -30,6 +30,9 @@ try {
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json'); // O JSON gerado pelo swagger.js
 
+// Finance Tracker
+const financeTrackerApp = require('./finance-tracker/src/app');
+
 // Cria uma instância do aplicativo Express, chamada "app".
 // Esse objeto é o coração da aplicação: é nele que você define rotas, middlewares e configurações.
 const app = express(); 
@@ -122,6 +125,9 @@ app.get('/simple-oauth-test.html', (req, res) => {
 
 // Mount routes
 app.use('/', require('./routes'));
+
+// Finance Tracker routes
+app.use('/finance-tracker', financeTrackerApp);
 
 // Monta o Swagger UI em /api-docs (interativo - requisito do projeto)
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
