@@ -13,7 +13,7 @@ const userValidation = [
 
 /**
  * @swagger
- * /finance-tracker/api/users:
+ * /api/users:
  *   post:
  *     summary: Criar novo usuário
  *     tags: [Users]
@@ -35,7 +35,7 @@ router.post('/', userValidation, userController.createUser);
 
 /**
  * @swagger
- * /finance-tracker/api/users:
+ * /api/users:
  *   get:
  *     summary: Listar todos os usuários
  *     tags: [Users]

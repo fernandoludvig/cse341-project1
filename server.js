@@ -132,6 +132,13 @@ app.use('/finance-tracker', financeTrackerApp);
 // Monta o Swagger UI em /api-docs (interativo - requisito do projeto)
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+// Rota específica para o Swagger do Finance Tracker
+app.get('/finance-tracker/api-docs', (req, res) => {
+  res.redirect('/finance-tracker/api-docs/');
+});
+
+app.use('/finance-tracker/api-docs', swaggerUi.serve, swaggerUi.setup(require('./finance-tracker/src/docs/swagger')));
+
 // Global error handler
 app.use((err, req, res, next) => {
     console.error('Global error handler:', err);
