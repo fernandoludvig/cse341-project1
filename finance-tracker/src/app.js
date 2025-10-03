@@ -10,7 +10,11 @@ const routes = require('./routes');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-connectDB();
+// Conectar ao MongoDB de forma assíncrona sem bloquear
+connectDB().catch(err => {
+  console.error('Erro ao conectar MongoDB:', err);
+  console.log('Continuando sem MongoDB...');
+});
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -55,9 +59,10 @@ app.use((error, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-  console.log(`Documentação disponível em: http://localhost:${PORT}/api-docs`);
-});
+// Não iniciar servidor aqui, será usado como middleware
+// app.listen(PORT, () => {
+//   console.log(`Servidor rodando na porta ${PORT}`);
+//   console.log(`Documentação disponível em: http://localhost:${PORT}/api-docs`);
+// });
 
 module.exports = app;
