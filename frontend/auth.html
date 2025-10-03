@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autenticação - CSE341 Project</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .auth-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input {
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        
+        .btn-google {
+            background-color: #db4437;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-google:hover {
+            background-color: #c23321;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #545b62;
+        }
+        
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: #e1e5e9;
+        }
+        
+        .divider span {
+            background-color: white;
+            padding: 0 15px;
+            color: #666;
+        }
+        
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #f5c6cb;
+            display: none;
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #c3e6cb;
+            display: none;
+        }
+        
+        .user-info {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .user-info h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        .user-info p {
+            margin: 5px 0;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <h2 style="text-align: center; margin-bottom: 30px; color: #333;">Autenticação</h2>
+        
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+        
+        <div id="loginForm" class="auth-form">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Senha:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <button type="button" class="btn btn-primary" onclick="login()">Entrar</button>
+            
+            <div class="divider">
+                <span>ou</span>
+            </div>
+            
+            <a href="/auth/google" class="btn btn-google">
+                <i class="fab fa-google"></i>
+                Entrar com Google
+            </a>
+            
+            <div class="divider">
+                <span>ou</span>
+            </div>
+            
+            <button type="button" class="btn btn-secondary" onclick="showRegisterForm()">Criar Conta</button>
+        </div>
+        
+        <div id="registerForm" class="auth-form" style="display: none;">
+            <div class="form-group">
+                <label for="regFirstName">Nome:</label>
+                <input type="text" id="regFirstName" name="firstName" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="regLastName">Sobrenome:</label>
+                <input type="text" id="regLastName" name="lastName" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="regEmail">Email:</label>
+                <input type="email" id="regEmail" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="regPassword">Senha:</label>
+                <input type="password" id="regPassword" name="password" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="regFavoriteColor">Cor Favorita:</label>
+                <input type="text" id="regFavoriteColor" name="favoriteColor" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="regBirthday">Data de Nascimento:</label>
+                <input type="date" id="regBirthday" name="birthday" required>
+            </div>
+            
+            <button type="button" class="btn btn-primary" onclick="register()">Registrar</button>
+            <button type="button" class="btn btn-secondary" onclick="showLoginForm()">Voltar ao Login</button>
+        </div>
+        
+        <div id="userInfo" class="user-info" style="display: none;">
+            <h3>Usuário Logado</h3>
+            <p><strong>Nome:</strong> <span id="userName"></span></p>
+            <p><strong>Email:</strong> <span id="userEmail"></span></p>
+            <p><strong>Provedor:</strong> <span id="userProvider"></span></p>
+            <button type="button" class="btn btn-secondary" onclick="logout()">Sair</button>
+        </div>
+    </div>
+
+    <script>
+        let currentToken = localStorage.getItem('token');
+        
+        // Check if user is already logged in
+        if (currentToken) {
+            checkUserStatus();
+        }
+        
+        function showMessage(message, isError = false) {
+            const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successMessage');
+            
+            if (isError) {
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                successDiv.style.display = 'none';
+            } else {
+                successDiv.textContent = message;
+                successDiv.style.display = 'block';
+                errorDiv.style.display = 'none';
+            }
+            
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+                successDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        function showLoginForm() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('userInfo').style.display = 'none';
+        }
+        
+        function showRegisterForm() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'block';
+            document.getElementById('userInfo').style.display = 'none';
+        }
+        
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (!email || !password) {
+                showMessage('Por favor, preencha todos os campos', true);
+                return;
+            }
+            
+            try {
+                const response = await fetch('/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);
+                    currentToken = data.token;
+                    showMessage('Login realizado com sucesso!');
+                    checkUserStatus();
+                } else {
+                    showMessage(data.error || 'Erro no login', true);
+                }
+            } catch (error) {
+                showMessage('Erro de conexão', true);
+            }
+        }
+        
+        async function register() {
+            const firstName = document.getElementById('regFirstName').value;
+            const lastName = document.getElementById('regLastName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const favoriteColor = document.getElementById('regFavoriteColor').value;
+            const birthday = document.getElementById('regBirthday').value;
+            
+            if (!firstName || !lastName || !email || !password || !favoriteColor || !birthday) {
+                showMessage('Por favor, preencha todos os campos', true);
+                return;
+            }
+            
+            try {
+                const response = await fetch('/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        firstName,
+                        lastName,
+                        email,
+                        password,
+                        favoriteColor,
+                        birthday
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);
+                    currentToken = data.token;
+                    showMessage('Registro realizado com sucesso!');
+                    checkUserStatus();
+                } else {
+                    showMessage(data.error || 'Erro no registro', true);
+                }
+            } catch (error) {
+                showMessage('Erro de conexão', true);
+            }
+        }
+        
+        async function checkUserStatus() {
+            if (!currentToken) return;
+            
+            try {
+                const response = await fetch('/auth/profile', {
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const userData = await response.json();
+                    showUserInfo(userData);
+                } else {
+                    localStorage.removeItem('token');
+                    currentToken = null;
+                }
+            } catch (error) {
+                console.error('Error checking user status:', error);
+            }
+        }
+        
+        function showUserInfo(userData) {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('userInfo').style.display = 'block';
+            
+            document.getElementById('userName').textContent = `${userData.firstName} ${userData.lastName}`;
+            document.getElementById('userEmail').textContent = userData.email;
+            document.getElementById('userProvider').textContent = userData.provider || 'Email/Password';
+        }
+        
+        async function logout() {
+            try {
+                await fetch('/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+            
+            localStorage.removeItem('token');
+            currentToken = null;
+            showLoginForm();
+            showMessage('Logout realizado com sucesso!');
+        }
+    </script>
+</body>
+</html>

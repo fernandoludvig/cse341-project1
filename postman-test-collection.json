@@ -1,0 +1,83 @@
+{
+  "info": {
+    "name": "CSE341 OAuth Tests",
+    "description": "Complete API tests for video demonstration"
+  },
+  "item": [
+    {
+      "name": "1. Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://cse341-project1-fphm.onrender.com/auth/health",
+          "protocol": "https",
+          "host": ["cse341-project1-fphm", "onrender", "com"],
+          "path": ["auth", "health"]
+        }
+      }
+    },
+    {
+      "name": "2. Register User", 
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"firstName\": \"Demo\",\n  \"lastName\": \"User\",\n  \"email\": \"demo@test.com\",\n  \"password\": \"password123\",\n  \"favoriteColor\": \"Blue\",\n  \"birthday\": \"1990-01-01\"\n}"
+        },
+        "url": {
+          "raw": "https://cse341-project1-fphm.onrender.com/auth/register",
+          "protocol": "https",
+          "host": ["cse341-project1-fphm", "onrender", "com"],
+          "path": ["auth", "register"]
+        }
+      }
+    },
+    {
+      "name": "3. Login",
+      "request": {
+        "method": "POST", 
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"demo@test.com\",\n  \"password\": \"password123\"\n}"
+        },
+        "url": {
+          "raw": "https://cse341-project1-fphm.onrender.com/auth/login",
+          "protocol": "https",
+          "host": ["cse341-project1-fphm", "onrender", "com"],
+          "path": ["auth", "login"]
+        }
+      }
+    },
+    {
+      "name": "4. Get Users (Protected)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer SEU_JWT_TOKEN_AQUI"
+          }
+        ],
+        "url": {
+          "raw": "https://cse341-project1-fphm.onrender.com/users",
+          "protocol": "https",
+          "host": ["cse341-project1-fphm", "onrender", "com"],
+          "path": ["users"]
+        }
+      }
+    }
+  ]
+}

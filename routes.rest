@@ -1,3 +1,5 @@
+### TESTES LOCAIS (localhost)
+
 ### Get all users (veja IDs aqui)
 GET http://localhost:3000/users
 
@@ -10,7 +12,7 @@ Content-Type: application/json
 "lastName": "Ludvig",
 "email": "marcus@gmail.com",
 "favoriteColor": "Green",
-"birthday": "1973-23-10"
+"birthday": "1973-10-23"
 }
 
 ### Get user by ID (use o ID retornado pelo POST acima!)
@@ -30,3 +32,106 @@ Content-Type: application/json
 
 ### DELETE user
 DELETE http://localhost:3000/users/68c49b8bb4269a172e5c62cd
+
+### ========================================
+### TESTES RENDER (produção)
+
+### Test API Status
+GET https://srv-d2u7t7vfte5s73atk4pg.onrender.com/
+
+### Get all users - RENDER
+GET https://srv-d2u7t7vfte5s73atk4pg.onrender.com/users
+
+### Create user - RENDER
+POST https://srv-d2u7t7vfte5s73atk4pg.onrender.com/users
+Content-Type: application/json
+
+{
+"firstName": "Teste",
+"lastName": "Render",
+"email": "teste@render.com",
+"favoriteColor": "Purple",
+"birthday": "1995-06-15"
+}
+
+### Get user by ID - RENDER (substitua pelo ID real)
+GET https://srv-d2u7t7vfte5s73atk4pg.onrender.com/users/SEU_ID_AQUI
+
+### PUT update user - RENDER
+PUT https://srv-d2u7t7vfte5s73atk4pg.onrender.com/users/SEU_ID_AQUI
+Content-Type: application/json
+
+{
+"firstName": "Teste Atualizado",
+"favoriteColor": "Orange"
+}
+
+### DELETE user - RENDER
+DELETE https://srv-d2u7t7vfte5s73atk4pg.onrender.com/users/SEU_ID_AQUI
+
+### ========================================
+### PRODUCTS TESTS - LOCAL
+
+### Get all products
+GET http://localhost:3000/products
+
+### Create product
+POST http://localhost:3000/products
+Content-Type: application/json
+
+{
+"name": "Laptop",
+"description": "High-performance gaming laptop",
+"price": 1299.99,
+"category": "Electronics",
+"inStock": true
+}
+
+### Get product by ID (replace with actual ID)
+GET http://localhost:3000/products/PRODUCT_ID_HERE
+
+### Update product
+PUT http://localhost:3000/products/PRODUCT_ID_HERE
+Content-Type: application/json
+
+{
+"name": "Gaming Laptop Pro",
+"price": 1599.99,
+"inStock": false
+}
+
+### Delete product
+DELETE http://localhost:3000/products/PRODUCT_ID_HERE
+
+### ========================================
+### PRODUCTS TESTS - RENDER
+
+### Get all products - RENDER
+GET https://srv-d2u7t7vfte5s73atk4pg.onrender.com/products
+
+### Create product - RENDER
+POST https://srv-d2u7t7vfte5s73atk4pg.onrender.com/products
+Content-Type: application/json
+
+{
+"name": "Smartphone",
+"description": "Latest model smartphone",
+"price": 799.99,
+"category": "Electronics",
+"inStock": true
+}
+
+### Get product by ID - RENDER
+GET https://srv-d2u7t7vfte5s73atk4pg.onrender.com/products/PRODUCT_ID_HERE
+
+### Update product - RENDER
+PUT https://srv-d2u7t7vfte5s73atk4pg.onrender.com/products/PRODUCT_ID_HERE
+Content-Type: application/json
+
+{
+"name": "Smartphone Pro",
+"price": 899.99
+}
+
+### Delete product - RENDER
+DELETE https://srv-d2u7t7vfte5s73atk4pg.onrender.com/products/PRODUCT_ID_HERE

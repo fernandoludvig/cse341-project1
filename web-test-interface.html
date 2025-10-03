@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 CSE341 OAuth API - Test Interface</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
+        .container { background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h1 { color: #333; text-align: center; }
+        .test-section { margin: 15px 0; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        .endpoint-name { background: #007bff; color: white; padding: 5px 10px; border-radius: 4px; font-weight: bold; margin-bottom: 10px; }
+        button { background: #28a745; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; margin: 5px; font-size: 14px; }
+        button:hover { background: #218838; }
+        .post-btn { background: #fd7e14; }
+        .get-btn { background: #17a2b8; }
+        .put-btn { background: #ffc107; color: black; }
+        .delete-btn { background: #dc3545; }
+        .response { margin-top: 10px; padding: 10px; border-radius: 4px; background: #f8f9fa; overflow-x: auto; min-height: 50px; }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; border: 1px solid #f5c6cb; }
+        .warning { background: #fff3cd; border: 1px solid #ffeaa7; }
+        pre { margin: 0; white-space: pre-wrap; }
+        .api-url { font-family: monospace; background: #f1f3f4; padding: 4px 8px; border-radius: 3px; color: #d63384; }
+        .status-info { font-size: 12px; color: #666; margin: 5px 0; }
+        input[type="text"], textarea { width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .token-input { font-family: monospace; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 CSE341 OAuth API Test Interface</h1>
+        <p>Este interface permite testar todos os endpoints da API <span class="api-url">https://cse341-project1-fphm.onrender.com</span></p>
+        
+        <div class="test-section">
+            <div class="endpoint-name">🔧 API Health Check</div>
+            <button class="get-btn" onclick="testHealth()">🚀 Testar API Base</button>
+            <button class="get-btn" onclick="testAuthHealth()">🔧 Testar Auth Health</button>
+            <div id="health-response" class="response"></div>
+        </div>
+
+        <div class="test-section">
+            <div class="endpoint-name">🔐 OAuth Authentication</div>
+            <button class="post-btn" onclick="toggleAuthPanel()">👤 Testar Registro/Login</button>
+            <div id="auth-panel" style="display:none;">
+                <textarea id="auth-json" placeholder='{"firstName":"Demo","lastName":"User","email":"demo@example.com","password":"password123","favoriteColor":"Blue","birthday":"1990-01-01"}' 
+                    rows="4" cols="50">{"firstName":"Demo","lastName":"User","email":"demo@example.com","password":"password123","favoriteColor":"Blue","birthday":"1990-01-01"}</textarea>
+                <button class="post-btn" onclick="testRegister()">📝 Registrar Usuário</button>
+                <button class="post-btn" onclick="testLogin()">🔑 Fazer Login</button>
+                <button class="post-btn" onclick="testLogout()">🚪 Logout</button>
+                <button class="get-btn" onclick="testProfile()">👤 Meu Perfil</button>
+            </div>
+            <div id="auth-response" class="response"></div>
+        </div>
+
+        <div class="test-section">
+            <div class="endpoint-name">🗂️ Protected Resources</div>
+            <p class="status-info">Token JWT: <span id="display-token">Nenhum token disponível</span></p>
+            <button class="get-btn" onclick="testUsers()">👥 Listar Usuários (Protected)</button>
+            <button class="get-btn" onclick="testUsersNoAuth()">⚠️ Usuários Sem Auth (Deve Falhar)</button>
+            <button class="post-btn" onclick="testProducts()">📦 Listar Produtos</button>
+            <div id="protected-response" class="response"></div>
+        </div>
+
+        <div class="test-section">
+            <div class="endpoint-name">🔑 Token Manager</div>
+            <input type="text" id="manual-token" class="token-input" placeholder="Cole seu JWT token aqui (opcional)">
+            <button class="get-btn" onclick="setToken()">⬆️ Definir Token Manual</button>
+            <button class="get-btn" onclick="clearToken()">🗑️ Limpar Token</button>
+            <div id="token-status" class="response"></div>
+        </div>
+    </div>
+
+    <script>
+        const BASE_URL = 'https://cse341-project1-fphm.onrender.com';
+        let currentToken = '';
+
+        function displayResponse(elementId, data, isSuccess = true) {
+            const element = document.getElementById(elementId);
+            const responseClass = isSuccess ? 'success' : 'error';
+            element.className = `response ${responseClass}`;
+            element.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+        }
+
+        function updateTokenStatus() {
+            document.getElementById('display-token').textContent = 
+                currentToken ? `Token definido: ${currentToken.substring(0, 50)}...` : 'Nenhum token disponível';
+        }
+
+        function testHealth() {
+            fetch(`${BASE_URL}/`)
+                .then(r => r.json())
+                .then(d => displayResponse('health-response', d, true))
+                .catch(e => displayResponse('health-response', {error: e.message}, false));
+        }
+
+        function testAuthHealth() {
+            fetch(`${BASE_URL}/auth/health`)
+                .then(r => r.json())
+                .then(d => displayResponse('health-response', d, true))
+                .catch(e => displayResponse('health-response', {error: e.message}, false));
+        }
+
+        function toggleAuthPanel() {
+            const panel = document.getElementById('auth-panel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function testRegister() {
+            const data = JSON.parse(document.getElementById('auth-json').value || '{}');
+            fetch(`${BASE_URL}/auth/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(r => r.json())
+            .then(d => {
+                if (d.token) {
+                    currentToken = d.token;
+                    updateTokenStatus();
+                }
+                displayResponse('auth-response', d, d.token ? true : false);
+            })
+            .catch(e => displayResponse('auth-response', {error: e.message}, false));
+        }
+
+        function testLogin() {
+            const data = JSON.parse(document.getElementById('auth-json').value || '{}');
+            const loginData = { email: data.email, password: data.password };
+            fetch(`${BASE_URL}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(loginData)
+            })
+            .then(r => r.json())
+            .then(d => {
+                if (d.token) {
+                    currentToken = d.token;
+                    updateTokenStatus();
+                }
+                displayResponse('auth-response', d, d.token ? true : false);
+            })
+            .catch(e => displayResponse('auth-response', {error: e.message}, false));
+        }
+
+        function testProfile() {
+            if (!currentToken) return displayResponse('auth-response', {error: 'Token necessário'}, false);
+            fetch(`${BASE_URL}/auth/profile`, {
+                headers: { 'Authorization': `Bearer ${currentToken}` }
+            })
+            .then(r => r.json())
+            .then(d => displayResponse('auth-response', d, r.ok))
+            .catch(e => displayResponse('auth-response', {error: e.message}, false));
+        }
+
+        function testUsers() {
+            if (!currentToken) return displayResponse('protected-response', {error: 'Token JWT necessário'}, false);
+            fetch(`${BASE_URL}/users`, {
+                headers: { 'Authorization': `Bearer ${currentToken}` }
+            })
+            .then(r => r.json())
+            .then(d => displayResponse('protected-response', d, true))
+            .catch(e => displayResponse('protected-response', {error: e.message}, false));
+        }
+
+        function testUsersNoAuth() {
+            fetch(`${BASE_URL}/users`)
+                .then(r => r.json())
+                .then(d => displayResponse('protected-response', d, false))
+                .catch(e => displayResponse('protected-response', {error: e.message}, false));
+        }
+
+        function testProducts() {
+            fetch(`${BASE_URL}/products`)
+                .then(r => r.json())
+                .then(d => displayResponse('protected-response', d, true))
+                .catch(e => displayResponse('protected-response', {error: e.message}, false));
+        }
+
+        function setToken() {
+            const manualToken = document.getElementById('manual-token').value.trim();
+            if (manualToken) {
+                currentToken = manualToken;
+                updateTokenStatus();
+                document.getElementById('token-status').innerHTML = '<strong>Token definido manualmente!</strong>';
+            } else {
+                document.getElementById('token-status').innerHTML = '<span style="color: red;">Por favor, insira um token válido</span>';
+            }
+        }
+
+        function clearToken() {
+            currentToken = '';
+            updateTokenStatus();
+            document.getElementById('token-status').innerHTML = '<span style="color: orange;">Token limpo</span>';
+        }
+
+        function testLogout() {
+            fetch(`${BASE_URL}/auth/logout`, { method: 'POST' })
+                .then(r => r.json())
+                .then(d => displayResponse('auth-response', d, true))
+                .catch(e => displayResponse('auth-response', {error: e.message}, false));
+        }
+
+        // Initialize
+        updateTokenStatus();
+    </script>
+</body>
+</html>

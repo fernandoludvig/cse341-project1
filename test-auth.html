@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test CSE341 Auth Endpoints</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .test-card { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 8px; }
+        .test-card h3 { margin-top: 0; color: #333; }
+        button { background: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; margin: 5px; }
+        button:hover { background: #0056b3; }
+        .auth-required { border-left: 4px solid orange; }
+        .protected { border-left: 4px solid red; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 4px; overflow-x: auto; }
+        .response { margin-top: 10px; padding: 10px; border-radius: 4px; }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste da API CSE341 - Autenticação</h1>
+    <p>Este é um teste simples para as funcionalidades de OAuth implementadas.</p>
+
+    <div class="test-card">
+        <h3>📋 Informações do Projeto</h3>
+        <p><strong>Servidor:</strong> <span id="server-info"></span></p>
+        <button onclick="testServerHealth()">🩺 Testar Conectividade do Servidor</button>
+        <div id="health-response" class="response"></div>
+    </div>
+
+    <div class="test-card">
+        <h3>👤 Register Usuário (Novo usuário)</h3>
+        <pre id="register-data">
+{
+  "firstName": "João",
+  "lastName": "Silva", 
+  "email": "joao@example.com",
+  "password": "senha123",
+  "favoriteColor": "Azul",
+  "birthday": "1990-05-15"
+}
+        </pre>
+        <button onclick="testRegister()">📝 Registrar Usuário</button>
+        <div id="register-response" class="response"></div>
+    </div>
+
+    <div class="test-card">
+        <h3>🔐 Login Usuário</h3>
+        <pre id="login-data">
+{
+  "email": "joao@example.com",
+  "password": "senha123"
+}
+        </pre>
+        <button onclick="testLogin()">🚪 Fazer Login</button>
+        <div id="login-response" class="response"></div>
+    </div>
+
+    <div class="test-card">
+        <h3>👤 Obter Perfil (Requer Auth)</h3>
+        <button onclick="testProfile()">👤 Ver Perfil</button>
+        <div id="profile-response" class="response"></div>
+    </div>
+
+    <div class="test-card protected">
+        <h3>🔒 Testar Rotas Protegidas</h3>
+        <button onclick="testProtectedEndpoints()">🛡️ Testar Acesso com Auth</button>
+        <div id="protected-response" class="response"></div>
+    </div>
+
+    <div class="test-card protected">
+        <h3>🚫 Testar Acesso Sem Auth (Deve Falhar)</h3>
+        <button onclick="testWithoutAuth()">⚠️ Testar Sem Token</button>
+        <div id="no-auth-response" class="response"></div>
+    </div>
+
+    <script>
+        const BASE_URL = 'http://localhost:3000';
+        let authToken = '';
+
+        // Atualizar info do servidor
+        document.getElementById('server-info').textContent = BASE_URL;
+
+        function displayResponse(elementId, data, isSuccess = true) {
+            const element = document.getElementById(elementId);
+            element.className = `response ${isSuccess ? 'success' : 'error'}`;
+            element.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+        }
+
+        async function testServerHealth() {
+            try {
+                const response = await fetch(`${BASE_URL}/`);
+                const data = await response.json();
+                displayResponse('health-response', data, true);
+            } catch (error) {
+                displayResponse('health-response', { error: error.message }, false);
+            }
+        }
+
+        async function testRegister() {
+            try {
+                const registerData = {
+                    firstName: "João",
+                    lastName: "Silva",
+                    email: "joao@example.com",
+                    password: "senha123",
+                    favoriteColor: "Azul",
+                    birthday: "1990-05-15"
+                };
+                
+                const response = await fetch(`${BASE_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(registerData)
+                });
+                const data = await response.json();
+                
+                if (data.token) {
+                    authToken = data.token;
+                    displayResponse('register-response', data, true);
+                } else {
+                    displayResponse('register-response', data, false);
+                }
+            } catch (error) {
+                displayResponse('register-response', { error: error.message }, false);
+            }
+        }
+
+        async function testLogin() {
+            try {
+                const loginData = {
+                    email: "joao@example.com",
+                    password: "senha123"
+                };
+                
+                const response = await fetch(`${BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(loginData)
+                });
+                const data = await response.json();
+                
+                if (data.token) {
+                    authToken = data.token;
+                    displayResponse('login-response', data, true);
+                } else {
+                    displayResponse('login-response', data, false);
+                }
+            } catch (error) {
+                displayResponse('login-response', { error: error.message }, false);
+            }
+        }
+
+        async function testProfile() {
+            try {
+                const response = await fetch(`${BASE_URL}/auth/profile`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json',
+                    }
+                });
+                const data = await response.json();
+                displayResponse('profile-response', data, response.ok);
+            } catch (error) {
+                displayResponse('profile-response', { error: error.message }, false);
+            }
+        }
+
+        async function testProtectedEndpoints() {
+            try {
+                // Testar GET users com token
+                const protectedResponse = await fetch(`${BASE_URL}/users`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json',
+                    }
+                });
+                const data = await protectedResponse.json();
+                displayResponse('protected-response', data, protectedResponse.ok);
+            } catch (error) {
+                displayResponse('protected-response', { error: error.message }, false);
+            }
+        }
+
+        async function testWithoutAuth() {
+            try {
+                // Sem token - deve retornar erro 401
+                const response = await fetch(`${BASE_URL}/users`);
+                const data = await response.json();
+                displayResponse('no-auth-response', data, response.ok);
+            } catch (error) {
+                displayResponse('no-auth-response', { error: error.message }, false);
+            }
+        }
+    </script>
+</body>
+</html>
