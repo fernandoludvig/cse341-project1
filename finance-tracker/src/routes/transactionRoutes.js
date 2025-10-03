@@ -14,7 +14,7 @@ const transactionValidation = [
 
 /**
  * @swagger
- * /api/transactions:
+ * /finance-tracker/api/transactions:
  *   post:
  *     summary: Criar nova transação
  *     tags: [Transactions]
@@ -36,7 +36,7 @@ router.post('/', transactionValidation, transactionController.createTransaction)
 
 /**
  * @swagger
- * /api/transactions:
+ * /finance-tracker/api/transactions:
  *   get:
  *     summary: Listar transações
  *     tags: [Transactions]
