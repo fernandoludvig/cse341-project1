@@ -14,6 +14,10 @@ const options = {
     },
     servers: [
       {
+        url: 'https://cse341-project1-fphm.onrender.com/finance-tracker',
+        description: 'Servidor de produção'
+      },
+      {
         url: 'http://localhost:3000',
         description: 'Servidor de desenvolvimento'
       }
