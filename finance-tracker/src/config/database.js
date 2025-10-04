@@ -6,9 +6,13 @@ const connectDB = async () => {
     
     if (!mongoUri) {
       console.error('MONGODB_URI não encontrada nas variáveis de ambiente');
+      console.log('Verifique se a variável MONGODB_URI está configurada no Render.com');
       console.log('Continuando sem MongoDB...');
       return null;
     }
+    
+    console.log('Tentando conectar ao MongoDB...');
+    console.log('URI encontrada:', mongoUri.replace(/\/\/.*@/, '//***:***@')); // Mascarar credenciais no log
     
     // Configurações globais do Mongoose
     mongoose.set('bufferCommands', false);
@@ -16,12 +20,16 @@ const connectDB = async () => {
     
     // Configurações do Mongoose para produção
     const options = {
-      serverSelectionTimeoutMS: 5000, // 5 segundos para seleção do servidor
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 10000, // 10 segundos para seleção do servidor
       socketTimeoutMS: 45000, // 45 segundos para operações
       connectTimeoutMS: 10000, // 10 segundos para conexão
       maxPoolSize: 10, // Máximo de conexões no pool
-      minPoolSize: 5, // Mínimo de conexões no pool
+      minPoolSize: 1, // Mínimo de conexões no pool
       maxIdleTimeMS: 30000, // 30 segundos de idle
+      keepAlive: true,
+      keepAliveInitialDelay: 300000,
       bufferMaxEntries: 0,
       bufferCommands: false,
     };
