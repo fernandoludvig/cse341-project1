@@ -7,14 +7,25 @@ const swaggerSpecs = require('./docs/swagger');
 const connectDB = require('./config/database');
 const routes = require('./routes');
 
+// Carregar variáveis de ambiente
+require('dotenv').config();
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Conectar ao MongoDB de forma assíncrona sem bloquear
-connectDB().catch(err => {
-  console.error('Erro ao conectar MongoDB:', err);
-  console.log('Continuando sem MongoDB...');
-});
+// Conectar ao MongoDB antes de iniciar o servidor
+const startServer = async () => {
+  try {
+    await connectDB();
+    console.log('Conexão com MongoDB estabelecida');
+  } catch (error) {
+    console.error('Erro ao conectar MongoDB:', error);
+    console.log('Continuando sem MongoDB...');
+  }
+};
+
+// Iniciar conexão com o banco
+startServer();
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -59,10 +70,12 @@ app.use((error, req, res, next) => {
   });
 });
 
-// Não iniciar servidor aqui, será usado como middleware
-// app.listen(PORT, () => {
-//   console.log(`Servidor rodando na porta ${PORT}`);
-//   console.log(`Documentação disponível em: http://localhost:${PORT}/api-docs`);
-// });
+// Iniciar servidor se não estiver sendo usado como middleware
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+    console.log(`Documentação disponível em: http://localhost:${PORT}/api-docs`);
+  });
+}
 
 module.exports = app;

@@ -10,7 +10,15 @@ const connectDB = async () => {
       return null;
     }
     
-    const conn = await mongoose.connect(mongoUri);
+    // Configurações do Mongoose para produção
+    const options = {
+      serverSelectionTimeoutMS: 30000, // 30 segundos
+      socketTimeoutMS: 45000, // 45 segundos
+      bufferMaxEntries: 0,
+      bufferCommands: false,
+    };
+    
+    const conn = await mongoose.connect(mongoUri, options);
     console.log(`MongoDB conectado: ${conn.connection.host}`);
     return conn;
   } catch (error) {
