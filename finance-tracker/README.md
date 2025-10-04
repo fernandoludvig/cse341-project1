@@ -26,13 +26,7 @@ Sistema de gerenciamento financeiro pessoal com API REST.
 npm install
 ```
 
-2. Configure as variáveis de ambiente:
-```bash
-cp env.example .env
-```
-Edite o arquivo `.env` com suas configurações reais.
-
-3. Execute o servidor:
+2. Execute o servidor:
 ```bash
 npm start
 ```
@@ -106,17 +100,3 @@ src/
 - Validação de entrada
 - CORS configurado
 - Tratamento de erros padronizado
-- Variáveis de ambiente para configurações sensíveis
-- Credenciais não expostas no código fonte
-
-## Variáveis de Ambiente
-
-Configure as seguintes variáveis no arquivo `.env`:
-
-- `MONGODB_URL`: String de conexão do MongoDB (ou `MONGODB_URI` como alternativa)
-- `PORT`: Porta do servidor (padrão: 3000)
-- `NODE_ENV`: Ambiente de execução (development/production)
-- `JWT_SECRET`: Chave secreta para JWT
-- `GOOGLE_CLIENT_ID`: ID do cliente Google OAuth
-- `GOOGLE_CLIENT_SECRET`: Segredo do cliente Google OAuth
-- `GOOGLE_CALLBACK_URL`: URL de callback do Google OAuth
