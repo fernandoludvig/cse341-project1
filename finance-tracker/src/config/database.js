@@ -2,7 +2,14 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    const mongoUri = process.env.MONGODB_URI || 'mongodb+srv://fernandoludvig:082004Fe@cluster0.k8gunhp.mongodb.net/finance-tracker';
+    const mongoUri = process.env.MONGODB_URI;
+    
+    if (!mongoUri) {
+      console.error('MONGODB_URI não encontrada nas variáveis de ambiente');
+      console.log('Continuando sem MongoDB...');
+      return null;
+    }
+    
     const conn = await mongoose.connect(mongoUri);
     console.log(`MongoDB conectado: ${conn.connection.host}`);
     return conn;
