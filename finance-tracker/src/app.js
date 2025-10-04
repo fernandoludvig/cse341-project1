@@ -19,16 +19,17 @@ app.set('trust proxy', 1);
 // Conectar ao MongoDB antes de iniciar o servidor
 const startServer = async () => {
   try {
-    await connectDB();
-    console.log('Conexão com MongoDB estabelecida');
+    const dbConnection = await connectDB();
+    if (dbConnection) {
+      console.log('Conexão com MongoDB estabelecida');
+    } else {
+      console.log('MongoDB não conectado, mas servidor iniciando...');
+    }
   } catch (error) {
     console.error('Erro ao conectar MongoDB:', error);
     console.log('Continuando sem MongoDB...');
   }
 };
-
-// Iniciar conexão com o banco
-startServer();
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -78,9 +79,19 @@ app.use((error, req, res, next) => {
 
 // Iniciar servidor se não estiver sendo usado como middleware
 if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
-    console.log(`Documentação disponível em: http://localhost:${PORT}/api-docs`);
+  // Aguardar conexão com MongoDB antes de iniciar servidor
+  startServer().then(() => {
+    app.listen(PORT, () => {
+      console.log(`Servidor rodando na porta ${PORT}`);
+      console.log(`Documentação disponível em: http://localhost:${PORT}/api-docs`);
+    });
+  }).catch((error) => {
+    console.error('Erro ao iniciar servidor:', error);
+    // Iniciar servidor mesmo com erro de MongoDB
+    app.listen(PORT, () => {
+      console.log(`Servidor rodando na porta ${PORT} (sem MongoDB)`);
+      console.log(`Documentação disponível em: http://localhost:${PORT}/api-docs`);
+    });
   });
 }
 

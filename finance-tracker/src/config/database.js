@@ -15,7 +15,7 @@ const connectDB = async () => {
     console.log('URI encontrada:', mongoUri.replace(/\/\/.*@/, '//***:***@')); // Mascarar credenciais no log
     
     // Configurações globais do Mongoose
-    mongoose.set('bufferCommands', false);
+    mongoose.set('bufferCommands', true); // Permitir buffer temporariamente
     mongoose.set('bufferMaxEntries', 0);
     
     // Configurações do Mongoose para produção
@@ -31,11 +31,15 @@ const connectDB = async () => {
       keepAlive: true,
       keepAliveInitialDelay: 300000,
       bufferMaxEntries: 0,
-      bufferCommands: false,
+      bufferCommands: true,
     };
     
     const conn = await mongoose.connect(mongoUri, options);
     console.log(`MongoDB conectado: ${conn.connection.host}`);
+    
+    // Desabilitar buffer após conexão bem-sucedida
+    mongoose.set('bufferCommands', false);
+    console.log('Buffer de comandos desabilitado após conexão');
     
     // Configurar listeners para eventos de conexão
     mongoose.connection.on('error', (err) => {
