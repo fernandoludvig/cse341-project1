@@ -13,6 +13,9 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Configurar trust proxy para produção (Render.com)
+app.set('trust proxy', 1);
+
 // Conectar ao MongoDB antes de iniciar o servidor
 const startServer = async () => {
   try {
@@ -33,7 +36,10 @@ const limiter = rateLimit({
   message: {
     success: false,
     message: 'Muitas requisições, tente novamente em 15 minutos'
-  }
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  trustProxy: true
 });
 
 app.use(helmet());
