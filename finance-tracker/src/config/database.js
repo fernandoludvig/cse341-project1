@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    const mongoUri = process.env.MONGODB_URI;
+    const mongoUri = process.env.MONGODB_URL || process.env.MONGODB_URI;
     
     if (!mongoUri) {
-      console.error('MONGODB_URI não encontrada nas variáveis de ambiente');
-      console.log('Verifique se a variável MONGODB_URI está configurada no Render.com');
+      console.error('MONGODB_URL ou MONGODB_URI não encontrada nas variáveis de ambiente');
+      console.log('Verifique se a variável MONGODB_URL está configurada no Render.com');
       console.log('Continuando sem MongoDB...');
       return null;
     }

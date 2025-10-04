@@ -113,7 +113,7 @@ src/
 
 Configure as seguintes variáveis no arquivo `.env`:
 
-- `MONGODB_URI`: String de conexão do MongoDB
+- `MONGODB_URL`: String de conexão do MongoDB (ou `MONGODB_URI` como alternativa)
 - `PORT`: Porta do servidor (padrão: 3000)
 - `NODE_ENV`: Ambiente de execução (development/production)
 - `JWT_SECRET`: Chave secreta para JWT

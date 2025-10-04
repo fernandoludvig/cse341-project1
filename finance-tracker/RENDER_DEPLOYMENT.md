@@ -14,7 +14,7 @@ Para que a aplicação funcione corretamente no Render.com, você precisa config
 Adicione as seguintes variáveis:
 
 ```
-MONGODB_URI=mongodb+srv://fernandoludvig:082004Fe@cluster0.k8gunhp.mongodb.net/finance-tracker
+MONGODB_URL=mongodb+srv://Render-user:082004Fe@cluster0.k8gunhp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 NODE_ENV=production
 PORT=10000
 ```
@@ -22,8 +22,8 @@ PORT=10000
 ### 3. Como Adicionar Variáveis no Render
 
 1. Clique em "Add Environment Variable"
-2. **Key:** `MONGODB_URI`
-3. **Value:** `mongodb+srv://fernandoludvig:082004Fe@cluster0.k8gunhp.mongodb.net/finance-tracker`
+2. **Key:** `MONGODB_URL`
+3. **Value:** `mongodb+srv://Render-user:082004Fe@cluster0.k8gunhp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
 4. Clique em "Save Changes"
 
 Repita para as outras variáveis:
