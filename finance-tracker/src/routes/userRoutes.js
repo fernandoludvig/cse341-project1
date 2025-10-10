@@ -25,9 +25,46 @@ const userValidation = [
  *             $ref: '#/components/schemas/User'
  *     responses:
  *       201:
- *         description: Usuário criado com sucesso
+ *         description: Usuário criado com sucesso - Token JWT incluído automaticamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Usuário criado com sucesso"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     user:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: string
+ *                         email:
+ *                           type: string
+ *                         firstName:
+ *                           type: string
+ *                         lastName:
+ *                           type: string
+ *                         profilePicture:
+ *                           type: string
+ *                     token:
+ *                       type: string
+ *                       description: "JWT Token para autenticação"
+ *                       example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                     tokenType:
+ *                       type: string
+ *                       example: "Bearer"
+ *                     expiresIn:
+ *                       type: string
+ *                       example: "7d"
  *       400:
- *         description: Dados inválidos
+ *         description: Dados inválidos ou usuário já existe
  *       500:
  *         description: Erro interno do servidor
  */

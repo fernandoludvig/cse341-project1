@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const { generateToken } = require('../middleware/auth');
 
 const userController = {
   createUser: async (req, res) => {
@@ -25,10 +26,24 @@ const userController = {
 
       await user.save();
       
+      // Gerar token automaticamente
+      const token = generateToken(user);
+      
       res.status(201).json({
         success: true,
         message: 'Usuário criado com sucesso',
-        data: user
+        data: {
+          user: {
+            id: user._id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            profilePicture: user.profilePicture
+          },
+          token: token,
+          tokenType: 'Bearer',
+          expiresIn: '7d'
+        }
       });
     } catch (error) {
       console.error('Erro ao criar usuário:', error);
