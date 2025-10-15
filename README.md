@@ -13,7 +13,8 @@ API REST para gerenciamento de usuários com operações CRUD completas, documen
 - ✅ **GET** `/auth/google` - Inicia autenticação OAuth com Google
 - ✅ **GET** `/auth/google/callback` - Callback OAuth do Google
 - ✅ **POST** `/auth/oauth/logout` - Logout OAuth
-- 🔐 **Todas as rotas de usuários e produtos** requerem autenticação (exceto GET públicos)
+- 🔐 **Todas as rotas de usuários** requerem autenticação OAuth
+- 🔐 **Rotas de produtos** (POST, PUT, DELETE) requerem autenticação OAuth
 
 ### Usuários (Protegido por Auth)
 - ✅ **GET** `/users` - Lista todos os usuários (protegido)
@@ -99,6 +100,32 @@ Acesse: `http://localhost:3000/api-docs`
 
 ## Testes
 Use o arquivo `routes.rest` com a extensão REST Client do VS Code, ou teste diretamente no Swagger UI.
+
+### Testes Unitários
+O projeto inclui testes unitários completos para todos os módulos principais:
+
+```bash
+# Executar todos os testes
+npm test
+
+# Executar testes em modo watch
+npm run test:watch
+
+# Executar testes com coverage
+npm run test:coverage
+```
+
+**Arquivos de teste:**
+- `tests/users.test.js` - Testes para controllers/users.js (GET e getAll)
+- `tests/products.test.js` - Testes para controllers/products.js (GET e getAll)  
+- `tests/database.test.js` - Testes para data/database.js
+
+**Cobertura de testes:**
+- ✅ GET /users - Lista todos os usuários
+- ✅ GET /users/:id - Busca usuário por ID
+- ✅ GET /products - Lista todos os produtos
+- ✅ GET /products/:id - Busca produto por ID
+- ✅ Database operations - Conexão e operações básicas
 
 ## Deploy no Render
 1. Conecte seu repositório GitHub ao Render

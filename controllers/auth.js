@@ -301,6 +301,20 @@ const isAuthenticated = (req, res, next) => {
     res.status(401).json({ error: 'Authentication required' });
 };
 
+// OAuth middleware for protected routes
+const oauthRequired = (req, res, next) => {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ 
+            error: 'OAuth authentication required',
+            message: 'Please authenticate using OAuth before accessing this resource'
+        });
+    }
+    
+    // Add user info to request for use in controllers
+    req.oauthUser = req.user;
+    next();
+};
+
 module.exports = {
     register,
     login,
@@ -311,5 +325,6 @@ module.exports = {
     googleAuth,
     googleCallback,
     oauthLogout,
-    isAuthenticated
+    isAuthenticated,
+    oauthRequired
 };

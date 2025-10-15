@@ -10,13 +10,13 @@ router.get('/', productsController.getAll);
 // GET /products/:id - Get product by ID (public)
 router.get('/:id', productsController.getSingle);
 
-// POST /products - Create new product (requires auth)
-router.post('/', authController.verifyToken, productsController.createProduct);
+// POST /products - Create new product (requires OAuth)
+router.post('/', authController.oauthRequired, productsController.createProduct);
 
-// PUT /products/:id - Update product by ID (requires auth)
-router.put('/:id', authController.verifyToken, productsController.updateProduct);
+// PUT /products/:id - Update product by ID (requires OAuth)
+router.put('/:id', authController.oauthRequired, productsController.updateProduct);
 
-// DELETE /products/:id - Delete product by ID (requires auth)
-router.delete('/:id', authController.verifyToken, productsController.deleteProduct);
+// DELETE /products/:id - Delete product by ID (requires OAuth)
+router.delete('/:id', authController.oauthRequired, productsController.deleteProduct);
 
 module.exports = router;

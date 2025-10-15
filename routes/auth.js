@@ -17,4 +17,7 @@ router.get('/google', authController.googleAuth);
 router.get('/google/callback', authController.googleCallback);
 router.post('/oauth/logout', authController.oauthLogout);
 
+// OAuth logout route for authenticated users
+router.post('/logout', authController.oauthLogout);
+
 module.exports = router;
